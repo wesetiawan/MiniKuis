@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "714371629532",
+    "firebase_url": "https://mini-quis-43659.firebaseio.com",
+    "project_id": "mini-quis-43659",
+    "storage_bucket": "mini-quis-43659.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714371629532:android:242947f497a58ee7d40f19",
+        "android_client_info": {
+          "package_name": "com.ws.minikuis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714371629532-44bf67g76hpgs6hbqhvd58q1uiv7gv2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ws.minikuis",
+            "certificate_hash": "f08f4f968db39a4d1c3e75e210433a1156ad15ac"
+          }
+        },
+        {
+          "client_id": "714371629532-9e6od90sdbn56el904bs8vvno97hl6m5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8pshf7ZQnW-rjd6QsfcH34M3iwZLUv64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714371629532-9e6od90sdbn56el904bs8vvno97hl6m5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

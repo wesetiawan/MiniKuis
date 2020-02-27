@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="18dp"
+    android:background="@color/blueOceanSoft">
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:text="@string/pertanyaan_ke"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_pertanyaan"
+        android:textSize="20sp"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:text="Siapa Nama Presiden Indonesia yang ke 5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/questionText"
+                android:id="@+id/tv_jawabanA"
+                android:text="A"
+                />
+            <TextView
+                style="@style/questionText"
+                android:id="@+id/tv_jawabanB"
+                android:text="B"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/questionText"
+                android:id="@+id/tv_jawabanC"
+                android:text="C"/>
+            <TextView
+                style="@style/questionText"
+                android:id="@+id/tv_jawabanD"
+                android:text="D"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="00:00"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <Button
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:text="Mulai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
