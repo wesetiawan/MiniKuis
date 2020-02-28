@@ -67,6 +67,8 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
 
     private fun firebaseAuthWIthGoogle(account: GoogleSignInAccount) {
         Log.d(TAG, "FirebaseAuthWIthGoogle: " + account.id!!)
+        var name: String
+        var uid: String
 
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential)
@@ -78,7 +80,7 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
                 }else{
                     Log.d(TAG, "signInWIthCredential:failed", task.exception)
                     Toast.makeText(this,"Authentication Failed",Toast.LENGTH_SHORT).show()
-                    updateUI()
+                    getUserData(null)
                 }
             }
     }

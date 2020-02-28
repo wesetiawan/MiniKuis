@@ -6,7 +6,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Pertanyaan (
-    var id: String = "",
     var petanyaan: String = "",
     var jawabanA: String = "",
     var jawabanB: String = "",
