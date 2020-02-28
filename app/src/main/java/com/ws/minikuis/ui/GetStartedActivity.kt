@@ -16,12 +16,19 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.PlayGamesAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.ws.minikuis.R
+import com.ws.minikuis.model.User
 import kotlinx.android.synthetic.main.activity_get_started.*
 
 class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
     private lateinit var googleSignInClient: GoogleSignInClient
 
     companion object{
@@ -53,7 +60,7 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
                 firebaseAuthWIthGoogle(account!!)
             }catch (e: ApiException){
                 Log.w(TAG, "Google sign in failed", e)
-                updateUI(null)
+                updateUI()
             }
         }
     }
@@ -67,25 +74,47 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
                 if (task.isSuccessful){
                     Log.d(TAG,"signInWithCrenditial:success")
                     val user = auth.currentUser
-                    updateUI(user)
+                    getUserData(user)
                 }else{
                     Log.d(TAG, "signInWIthCredential:failed", task.exception)
                     Toast.makeText(this,"Authentication Failed",Toast.LENGTH_SHORT).show()
-                    updateUI(null)
+                    updateUI()
                 }
             }
     }
+
 
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    private fun updateUI(user: FirebaseUser?) {
+    private fun updateUI() {
         val mainActivity = Intent(this@GetStartedActivity,MainActivity::class.java)
         startActivity(mainActivity)
         finish()
     }
+
+    private fun getUserData(user: FirebaseUser?){
+        Log.d(TAG,"getUserData")
+        val user = auth.currentUser
+        user?.let {
+            val name = user.displayName
+            val uid = user.uid
+            writeNewUser(uid,name.toString(),0)
+        }
+
+    }
+
+    private fun writeNewUser(userId: String,name: String,skor: Int){
+        Log.d(TAG,"writeNewUser")
+        database = FirebaseDatabase.getInstance().reference
+        val user = User(name,skor)
+        database.child("user").child(userId).setValue(user)
+        updateUI()
+    }
+
+
 
     override fun onClick(v: View) {
         when(v.id){
