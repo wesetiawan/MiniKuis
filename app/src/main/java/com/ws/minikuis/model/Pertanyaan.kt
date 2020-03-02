@@ -6,9 +6,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Pertanyaan (
-    var petanyaan: String = "",
+    var soal: String = "",
     var jawabanA: String = "",
     var jawabanB: String = "",
     var jawabanC: String = "",
-    var jawabanD: String = ""
+    var jawabanD: String = "",
+    var jawabanTepat: String = ""
 ): Parcelable

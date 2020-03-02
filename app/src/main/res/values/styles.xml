@@ -12,6 +12,16 @@
         <item name="colorPrimaryDark">@color/colorAccent</item>
 
     </style>
+
+    <style name="dumbPlaceHolder">
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:background">@color/placeHolderbg</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">120dp</item>
+    </style>
     
     <style name="questionText">
         <item name="android:gravity">center</item>

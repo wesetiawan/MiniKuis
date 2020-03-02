@@ -5,4 +5,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="blueOcean">#03DAC5</color>
     <color name="blueOceanSoft">#7FEDE2</color>
+    <color name="placeHolderbg">#DD7A7A7A</color>
 </resources>

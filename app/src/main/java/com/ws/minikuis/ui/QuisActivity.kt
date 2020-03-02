@@ -3,21 +3,19 @@ package com.ws.minikuis.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ws.minikuis.R
-import com.ws.minikuis.fragment.MainFragment
-import com.ws.minikuis.fragment.ResultFragment
+import com.ws.minikuis.fragment.QuisFragment
 
-class MainActivity : AppCompatActivity() {
+class QuisActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        setContentView(R.layout.quis_activity)
         openQuisFragment()
     }
 
-    fun openQuisFragment(){
+    private fun openQuisFragment(){
         val transaction = supportFragmentManager.beginTransaction()
-        val fragment = MainFragment()
+        val fragment = QuisFragment()
         transaction.replace(R.id.frg_holder,fragment)
         transaction.commit()
     }

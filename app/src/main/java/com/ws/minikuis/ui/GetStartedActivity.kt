@@ -1,26 +1,21 @@
 package com.ws.minikuis.ui
 
+import android.content.Context
 import android.content.Intent
-import android.nfc.Tag
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.PlayGamesAuthProvider
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.ws.minikuis.R
 import com.ws.minikuis.model.User
 import kotlinx.android.synthetic.main.activity_get_started.*
@@ -30,6 +25,9 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var googleSignInClient: GoogleSignInClient
+    var uName: String = ""
+    var uId: String = ""
+    var foundUser: Boolean = true
 
     companion object{
         private const val TAG = "GetStartedActivity"
@@ -67,8 +65,6 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
 
     private fun firebaseAuthWIthGoogle(account: GoogleSignInAccount) {
         Log.d(TAG, "FirebaseAuthWIthGoogle: " + account.id!!)
-        var name: String
-        var uid: String
 
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential)
@@ -76,15 +72,37 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
                 if (task.isSuccessful){
                     Log.d(TAG,"signInWithCrenditial:success")
                     val user = auth.currentUser
-                    getUserData(user)
+                    getUserAuthData(user)
+                    checkUserDataAlready(uId)
+                    if (!foundUser){
+                        writeNewUser(uId,uName)
+                    }else{
+                        updateUI()
+                    }
                 }else{
                     Log.d(TAG, "signInWIthCredential:failed", task.exception)
                     Toast.makeText(this,"Authentication Failed",Toast.LENGTH_SHORT).show()
-                    getUserData(null)
                 }
             }
     }
 
+    private fun checkUserDataAlready(userId: String) {
+        Log.d(TAG,"getUserID")
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("user")
+        myRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.hasChild(userId)){
+                    foundUser(true)
+                }else{
+                    foundUser(false)
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+    }
 
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
@@ -92,28 +110,30 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
     private fun updateUI() {
-        val mainActivity = Intent(this@GetStartedActivity,MainActivity::class.java)
+        val mainActivity = Intent(this,QuisActivity::class.java)
         startActivity(mainActivity)
         finish()
     }
 
-    private fun getUserData(user: FirebaseUser?){
-        Log.d(TAG,"getUserData")
-        val user = auth.currentUser
-        user?.let {
-            val name = user.displayName
-            val uid = user.uid
-            writeNewUser(uid,name.toString(),0)
-        }
-
+    private fun foundUser(b: Boolean) {
+        foundUser = b
     }
 
-    private fun writeNewUser(userId: String,name: String,skor: Int){
+    private fun getUserAuthData(user: FirebaseUser?){
+        Log.d(TAG,"getUserData")
+        user?.let {
+            uName = user.displayName.toString()
+            uId = user.uid
+        }
+    }
+
+    private fun writeNewUser(userId: String,name: String){
         Log.d(TAG,"writeNewUser")
-        database = FirebaseDatabase.getInstance().reference
-        val user = User(name,skor)
-        database.child("user").child(userId).setValue(user)
-        updateUI()
+            database = FirebaseDatabase.getInstance().reference
+            val user = User(name,0)
+            database.child("user").child(userId).setValue(user)
+            updateUI()
+
     }
 
 
@@ -124,3 +144,4 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
         }
     }
 }
+
