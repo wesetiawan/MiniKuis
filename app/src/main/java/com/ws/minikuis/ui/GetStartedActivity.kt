@@ -23,14 +23,15 @@ import kotlinx.android.synthetic.main.activity_get_started.*
 class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var database: DatabaseReference
+    private lateinit var database: FirebaseDatabase
     private lateinit var googleSignInClient: GoogleSignInClient
+    var TAG = "GetStartedActivity"
     var uName: String = ""
     var uId: String = ""
-    var foundUser: Boolean = true
+    var USERID_KEY = "useridkey"
+    var userid_key = ""
 
     companion object{
-        private const val TAG = "GetStartedActivity"
         private const val RC_SIGN_IN = 9001
     }
 
@@ -47,6 +48,7 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -58,14 +60,12 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
                 firebaseAuthWIthGoogle(account!!)
             }catch (e: ApiException){
                 Log.w(TAG, "Google sign in failed", e)
-                updateUI()
             }
         }
     }
 
     private fun firebaseAuthWIthGoogle(account: GoogleSignInAccount) {
         Log.d(TAG, "FirebaseAuthWIthGoogle: " + account.id!!)
-
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this){task->
@@ -73,12 +73,7 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
                     Log.d(TAG,"signInWithCrenditial:success")
                     val user = auth.currentUser
                     getUserAuthData(user)
-                    checkUserDataAlready(uId)
-                    if (!foundUser){
-                        writeNewUser(uId,uName)
-                    }else{
-                        updateUI()
-                    }
+                    checkUserDataAlready()
                 }else{
                     Log.d(TAG, "signInWIthCredential:failed", task.exception)
                     Toast.makeText(this,"Authentication Failed",Toast.LENGTH_SHORT).show()
@@ -86,13 +81,12 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
             }
     }
 
-    private fun checkUserDataAlready(userId: String) {
-        Log.d(TAG,"getUserID")
-        val database = FirebaseDatabase.getInstance()
+    private fun checkUserDataAlready() {
+        Log.d(TAG,"checkUserDataAlready. uId : $uId")
         val myRef = database.getReference("user")
         myRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.hasChild(userId)){
+                if (dataSnapshot.hasChild(uId)){
                     foundUser(true)
                 }else{
                     foundUser(false)
@@ -110,13 +104,20 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
     private fun updateUI() {
-        val mainActivity = Intent(this,QuisActivity::class.java)
+        Log.d(TAG,"updateUI")
+        val mainActivity = Intent(this,QuesActivity::class.java)
         startActivity(mainActivity)
         finish()
     }
 
     private fun foundUser(b: Boolean) {
-        foundUser = b
+        Log.d(TAG,"foundUserSwitch: $b")
+        when {
+            !b -> { writeNewUser(uId,uName)
+            }
+            else -> { updateUI()
+            }
+        }
     }
 
     private fun getUserAuthData(user: FirebaseUser?){
@@ -124,16 +125,26 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
         user?.let {
             uName = user.displayName.toString()
             uId = user.uid
+            Log.d(TAG, "uid:$uId")
         }
+        saveUserIdToLocal(uId)
     }
 
     private fun writeNewUser(userId: String,name: String){
         Log.d(TAG,"writeNewUser")
-            database = FirebaseDatabase.getInstance().reference
-            val user = User(name,0)
-            database.child("user").child(userId).setValue(user)
-            updateUI()
+        val myRef = database.reference
+        val user = User(name,0)
+        myRef.child("user").child(userId).setValue(user)
+        updateUI()
+    }
 
+    fun saveUserIdToLocal(uId: String) {
+        val sharedPreferences = getSharedPreferences(USERID_KEY, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(userid_key, uId)
+        editor.apply()
+        editor.commit()
+        Log.d(TAG,"saveUidToLocal : $uId")
     }
 
 
