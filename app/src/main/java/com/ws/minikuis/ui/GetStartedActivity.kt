@@ -20,16 +20,18 @@ import com.ws.minikuis.R
 import com.ws.minikuis.model.User
 import kotlinx.android.synthetic.main.activity_get_started.*
 
-class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
+class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseDatabase
+    private lateinit var myRef: DatabaseReference
     private lateinit var googleSignInClient: GoogleSignInClient
-    var TAG = "GetStartedActivity"
+    private var TAG = "GetStartedActivity"
     var uName: String = ""
     var uId: String = ""
     var USERID_KEY = "useridkey"
     var userid_key = ""
+    var currentType = ""
 
     companion object{
         private const val RC_SIGN_IN = 9001
@@ -38,17 +40,18 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_get_started)
-
         btn_login_google.setOnClickListener(this)
+        btn_join_quiz.setOnClickListener(this)
+        btn_create_quiz.setOnClickListener(this)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
+        myRef = database.getReference("user")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -65,25 +68,20 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
     private fun firebaseAuthWIthGoogle(account: GoogleSignInAccount) {
-        Log.d(TAG, "FirebaseAuthWIthGoogle: " + account.id!!)
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this){task->
                 if (task.isSuccessful){
-                    Log.d(TAG,"signInWithCrenditial:success")
                     val user = auth.currentUser
                     getUserAuthData(user)
                     checkUserDataAlready()
                 }else{
-                    Log.d(TAG, "signInWIthCredential:failed", task.exception)
                     Toast.makeText(this,"Authentication Failed",Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
     private fun checkUserDataAlready() {
-        Log.d(TAG,"checkUserDataAlready. uId : $uId")
-        val myRef = database.getReference("user")
         myRef.addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.hasChild(uId)){
@@ -93,35 +91,40 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
                 }
             }
             override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
     }
 
     private fun signIn() {
+        btn_login_google.visibility= View.INVISIBLE
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    private fun updateUI() {
-        Log.d(TAG,"updateUI")
-        val mainActivity = Intent(this,QuesActivity::class.java)
+    private fun moveQuizActivity() {
+        val mainActivity = Intent(this,QuizActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(mainActivity)
+        finish()
+    }
+
+    private fun moveQuizCreatorActivity() {
+        val mainActivity = Intent(this,QuizCreatorActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(mainActivity)
         finish()
     }
 
     private fun foundUser(b: Boolean) {
-        Log.d(TAG,"foundUserSwitch: $b")
         when {
             !b -> { writeNewUser(uId,uName)
             }
-            else -> { updateUI()
+            else -> { moveActivitySwitch(currentType)
             }
         }
     }
 
     private fun getUserAuthData(user: FirebaseUser?){
-        Log.d(TAG,"getUserData")
         user?.let {
             uName = user.displayName.toString()
             uId = user.uid
@@ -131,28 +134,49 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
     private fun writeNewUser(userId: String,name: String){
-        Log.d(TAG,"writeNewUser")
-        val myRef = database.reference
         val user = User(name,0)
-        myRef.child("user").child(userId).setValue(user)
-        updateUI()
+        myRef.child(userId).setValue(user)
+        moveQuizActivity()
     }
 
-    fun saveUserIdToLocal(uId: String) {
+    private fun saveUserIdToLocal(uId: String) {
         val sharedPreferences = getSharedPreferences(USERID_KEY, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString(userid_key, uId)
         editor.apply()
         editor.commit()
-        Log.d(TAG,"saveUidToLocal : $uId")
     }
 
+    private fun moveActivitySwitch (type: String){
+        if (type == "join"){
+            moveQuizActivity()
+        }else{
+            moveQuizCreatorActivity()
+        }
+    }
 
+    private fun loginLayout (type: String){
+        currentType = type
+        main_login_layout.visibility= View.GONE
+        login_layout.visibility= View.VISIBLE
+    }
+
+    override fun onBackPressed() {
+        if (login_layout.visibility == View.VISIBLE){
+            main_login_layout.visibility= View.VISIBLE
+            login_layout.visibility= View.GONE
+        }else{
+            super.onBackPressed()
+        }
+    }
 
     override fun onClick(v: View) {
         when(v.id){
             R.id.btn_login_google -> signIn()
+            R.id.btn_join_quiz -> loginLayout("join")
+            R.id.btn_create_quiz -> loginLayout("create")
         }
     }
+
 }
 
