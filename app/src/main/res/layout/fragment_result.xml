@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="18dp">
 
@@ -12,64 +13,21 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:text="Hasil"
+        android:text="Winner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
 
     <LinearLayout
+        android:gravity="center"
         style="@style/resultHolder">
         <ImageView
             style="@style/resultIcon"
             android:src="@drawable/winner"/>
         <TextView
+            android:id="@+id/tv_name"
             style="@style/resultText"
             android:text="Wawan Eka Setiyawan"/>
-        <TextView
-            style="@style/resultScore"
-            android:text="100"/>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/resultHolder">
-
-        <ImageView
-            style="@style/resultIcon"
-            android:src="@drawable/winner2"/>
-        <TextView
-            style="@style/resultText"
-            android:text="Wawan Ganteng"/>
-        <TextView
-            style="@style/resultScore"
-            android:text="80"/>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/resultHolder">
-
-        <ImageView
-            style="@style/resultIcon"
-            android:src="@drawable/winner3"/>
-        <TextView
-            style="@style/resultText"
-            android:text="Wawan Logok"/>
-        <TextView
-            style="@style/resultScore"
-            android:text="60"/>
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/resultHolder">
-
-        <ImageView
-            style="@style/resultIcon"
-            android:src="@drawable/best"/>
-        <TextView
-            style="@style/resultText"
-            android:text="Wawan Goblok"/>
-        <TextView
-            style="@style/resultScore"
-            android:text="40"/>
     </LinearLayout>
 
 </LinearLayout>

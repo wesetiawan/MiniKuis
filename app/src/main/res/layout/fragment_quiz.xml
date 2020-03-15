@@ -19,7 +19,7 @@
     <LinearLayout
         android:gravity="center"
         android:visibility="gone"
-        android:id="@+id/quis_layout"
+        android:id="@+id/quizLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -91,6 +91,7 @@
             android:layout_height="wrap_content"
             />
         <TextView
+            android:visibility="invisible"
             android:id="@+id/tv_alert"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -104,85 +105,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:gravity="center"
-        android:visibility="visible"
-        android:id="@+id/input_key_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="18dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/mini_quis_ku" />
-
-        <ImageView
-            android:layout_margin="20dp"
-            android:src="@drawable/logo_miniquis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.cardview.widget.CardView
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:text="Kuis Key"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-
-                        android:visibility="gone"
-                        android:id="@+id/tv_error"
-                        android:textColor="@android:color/holo_red_light"
-                        android:gravity="end"
-                        android:textSize="12sp"
-                        android:text="Maaf Kuis Key Tidak di Temukan"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-                <EditText
-                    android:layout_marginTop="10dp"
-                    android:inputType="text"
-                    android:id="@+id/et_quiz_key"
-                    android:padding="10dp"
-                    android:background="@drawable/login_field_bg"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
-
-                <Button
-                    android:layout_margin="10dp"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:id="@+id/btn_key_join"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:text="Gabung"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-
-    <LinearLayout
         android:visibility="gone"
         android:id="@+id/waitingLayout"
         android:layout_width="match_parent"
@@ -192,7 +114,7 @@
 
     <LinearLayout
         android:visibility="gone"
-        android:id="@+id/error_layout"
+        android:id="@+id/errorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <include layout="@layout/error_layout"/>

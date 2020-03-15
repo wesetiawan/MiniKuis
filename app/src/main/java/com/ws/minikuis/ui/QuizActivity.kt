@@ -6,11 +6,14 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ws.minikuis.R
 import com.ws.minikuis.fragment.QuizFragment
+import com.ws.minikuis.fragment.QuizKeyFragment
+import com.ws.minikuis.fragment.ResultFragment
 import kotlinx.android.synthetic.main.quiz_activity.*
 
 class QuizActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     var TAG = "QuestActivity"
+    var status = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +25,8 @@ class QuizActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun openQuizFragment(){
         val transaction = supportFragmentManager.beginTransaction()
-        val fragment = QuizFragment()
-        transaction.replace(R.id.frg_holder,fragment)
+        val fragment = QuizKeyFragment()
+        transaction.add(R.id.frg_holder,fragment)
         transaction.commit()
     }
 

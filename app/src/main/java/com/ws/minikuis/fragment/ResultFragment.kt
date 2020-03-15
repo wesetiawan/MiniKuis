@@ -1,48 +1,57 @@
 package com.ws.minikuis.fragment
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.database.*
 import com.ws.minikuis.R
-import com.ws.minikuis.model.User
+import kotlinx.android.synthetic.main.fragment_result.*
 
 class ResultFragment : Fragment() {
-
+    private lateinit var database: FirebaseDatabase
+    private lateinit var winnerRef: DatabaseReference
     val TAG = "ResultFragment"
-    var USERID_KEY = "useridkey"
-    var userid_key = ""
-    var userid_key_new = ""
-
-    companion object {
-        fun newInstance() =
-            ResultFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }
+    private var quizKey = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        getBundle()
+        firebaseGetInstance()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_result, container, false)
     }
 
-    private fun getUserIdLocal() {
-        val sharedPreferences: SharedPreferences = context!!.getSharedPreferences(USERID_KEY, Context.MODE_PRIVATE)
-        userid_key_new = sharedPreferences.getString(userid_key, "").toString()
-        Log.d(TAG,"UserId is : $userid_key_new")
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        getWinner()
+    }
+
+    private fun firebaseGetInstance(){
+        database = FirebaseDatabase.getInstance()
+        winnerRef = database.getReference("winner").child(quizKey)
+    }
+
+    private fun getBundle(){
+        val bundle = this.arguments
+        quizKey = bundle?.getString("quizKey").toString()
+    }
+
+    private fun getWinner(){
+        winnerRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onCancelled(databaseError: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                tv_name.text = dataSnapshot.value.toString()
+            }
+
+        })
     }
 
 }

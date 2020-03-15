@@ -134,7 +134,7 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
     }
 
     private fun writeNewUser(userId: String,name: String){
-        val user = User(name,0)
+        val user = User(name)
         myRef.child(userId).setValue(user)
         moveQuizActivity()
     }

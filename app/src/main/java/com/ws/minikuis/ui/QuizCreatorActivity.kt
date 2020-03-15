@@ -4,34 +4,31 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.ws.minikuis.R
+import com.ws.minikuis.fragment.QuizCreatorFragment
+import kotlinx.android.synthetic.main.fragment_quiz_creator.*
 
 class QuizCreatorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_admin)
-        title = "Input Kuis"
+        setContentView(R.layout.activity_quiz_creator)
+        quizCreatorFragment()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu,menu)
-        return super.onCreateOptionsMenu(menu)
+    private fun quizCreatorFragment(){
+        val transaction = supportFragmentManager.beginTransaction()
+        val fragment = QuizCreatorFragment()
+        transaction.add(R.id.frg_holder,fragment)
+        transaction.commit()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        setMode(item.itemId)
-        return super.onOptionsItemSelected(item)
-    }
+    override fun onBackPressed() {
+        if (quiz_controller.visibility == View.VISIBLE){
+            quiz_creator_layout.visibility = View.VISIBLE
+            quiz_controller.visibility = View.GONE
+        }else super.onBackPressed()
 
-    private fun setMode(itemId: Int) {
-        when(itemId){
-            R.id.input_kuis ->{
-                title = "Input Kuis"
-            }
-            R.id.hasil_kuis ->{
-                title = "Hasil"
-            }
-        }
     }
 }
