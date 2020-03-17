@@ -27,7 +27,7 @@
         <TextView
             android:id="@+id/tv_name"
             style="@style/resultText"
-            android:text="Wawan Eka Setiyawan"/>
+            android:text=""/>
     </LinearLayout>
 
 </LinearLayout>

@@ -48,9 +48,9 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
             .requestIdToken(getString(R.string.default_web_client_id))
             .build()
 
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
         myRef = database.getReference("user")
     }
 
@@ -63,6 +63,7 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
                 firebaseAuthWIthGoogle(account!!)
             }catch (e: ApiException){
                 Log.w(TAG, "Google sign in failed", e)
+                progressbarOrLoginBtn(btn_login_google)
             }
         }
     }
@@ -77,6 +78,7 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
                     checkUserDataAlready()
                 }else{
                     Toast.makeText(this,"Authentication Failed",Toast.LENGTH_SHORT).show()
+                    progressbarOrLoginBtn(btn_login_google)
                 }
             }
     }
@@ -96,9 +98,19 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
     }
 
     private fun signIn() {
-        btn_login_google.visibility= View.INVISIBLE
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
+        progressbarOrLoginBtn(progressBar)
+    }
+
+    private fun progressbarOrLoginBtn(v: View){
+        if (v == progressBar){
+            progressBar.visibility = View.VISIBLE
+            btn_login_google.visibility= View.GONE
+        }else{
+            progressBar.visibility = View.GONE
+            btn_login_google.visibility= View.VISIBLE
+        }
     }
 
     private fun moveQuizActivity() {
@@ -128,7 +140,6 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
         user?.let {
             uName = user.displayName.toString()
             uId = user.uid
-            Log.d(TAG, "uid:$uId")
         }
         saveUserIdToLocal(uId)
     }

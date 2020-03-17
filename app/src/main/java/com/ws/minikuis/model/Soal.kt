@@ -11,5 +11,6 @@ data class Soal (
     var c: String,
     var d: String,
     var jawaban_tepat: String,
-    var status: String
+    var status: String,
+    var creator: String
 ): Parcelable

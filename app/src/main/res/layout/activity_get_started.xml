@@ -47,6 +47,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ProgressBar
+                android:visibility="gone"
                 android:progressBackgroundTintMode="add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

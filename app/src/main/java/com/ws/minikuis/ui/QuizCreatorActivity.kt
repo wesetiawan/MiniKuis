@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_quiz_creator.*
 
 class QuizCreatorActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_creator)
@@ -28,7 +29,10 @@ class QuizCreatorActivity : AppCompatActivity() {
         if (quiz_controller.visibility == View.VISIBLE){
             quiz_creator_layout.visibility = View.VISIBLE
             quiz_controller.visibility = View.GONE
-        }else super.onBackPressed()
+        }else{
+            super.onBackPressed()
+        }
 
     }
+
 }

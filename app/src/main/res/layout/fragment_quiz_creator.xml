@@ -178,15 +178,15 @@
         <Button
             android:layout_marginTop="10dp"
             android:background="@android:color/white"
-            android:id="@+id/btn_kirim"
+            android:id="@+id/btn_buat"
             android:textAllCaps="false"
-            android:text="Kirim"
+            android:text="Buat Kuis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/quiz_controller"
         android:padding="20dp"
         android:gravity="center"
@@ -195,6 +195,7 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/tv_pertanyaan"
             android:textSize="24sp"
             android:gravity="center"
             android:padding="10dp"
@@ -212,6 +213,19 @@
             android:text="0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/winner_layout"
+            android:gravity="center"
+            style="@style/resultHolder">
+            <ImageView
+                style="@style/resultIcon"
+                android:src="@drawable/winner"/>
+            <TextView
+                android:id="@+id/tv_name"
+                style="@style/resultText"
+                android:text=""/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_marginTop="10dp"

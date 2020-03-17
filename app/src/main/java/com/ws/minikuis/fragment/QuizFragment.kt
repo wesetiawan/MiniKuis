@@ -34,7 +34,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
     var status = ""
     private var quizKey = ""
     private val selectedAnswerBG : Int = R.drawable.selected_answer_background
-    private val unselectedAnswerBG: Int = R.drawable.rounded_shape_background_white
     private val wrongAnswerBG = R.drawable.wrong_answer_bg
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_quiz, container, false)
     }
 
@@ -60,10 +58,14 @@ class QuizFragment : Fragment(),View.OnClickListener{
         prepareQuiz()
     }
 
+    override fun onDestroy() {
+        quizRef.child("status").removeEventListener(statusListener)
+        super.onDestroy()
+    }
+
     private fun firebaseGetInstance(){
         database = FirebaseDatabase.getInstance()
         auth = FirebaseAuth.getInstance()
-
         quizRef = database.getReference("quiz").child(quizKey)
         winnerRef = database.getReference("winner")
     }
@@ -98,10 +100,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
         quizRef.child("status").addValueEventListener(statusListener)
     }
 
-    private fun stopQuizStatusListener(){
-        database.goOffline()
-    }
-
     private fun prepareQuiz(){
         shimmerLayoutCall()
         shimmerLayout.startShimmer()
@@ -132,7 +130,7 @@ class QuizFragment : Fragment(),View.OnClickListener{
     }
 
     private fun updateStatus(){
-        quizRef.child("status").setValue("end")
+        quizRef.child("status").setValue("stop")
     }
 
     private fun startQuiz(){
@@ -147,17 +145,17 @@ class QuizFragment : Fragment(),View.OnClickListener{
     }
 
     private fun wrongAnswer(v: TextView) {
-        if (status!= "end" && status!="waiting"){
+        if (status!= "stop" || status!="waiting"){
             selectedAnswerAnimation(v)
             buttonCondition(false)
-        }else if (status == "end"){
+        }else if (status == "stop"){
             resultFragment()
         }
 
     }
 
     private fun winner(){
-        winnerRef.child(quizKey).setValue(auth.currentUser?.displayName)
+        winnerRef.child(quizKey).setValue(auth.currentUser?.displayName.toString())
         resultFragment()
     }
 
@@ -176,7 +174,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
                     waitingLayoutCall()
                 }
                 else -> {
-                    stopQuizStatusListener()
                     resultFragment()
                 }
             }
