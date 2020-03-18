@@ -31,7 +31,6 @@ class QuizCreatorFragment : Fragment(), View.OnClickListener,
     private var USERID_KEY = "useridkey"
     private var userid_key = ""
     private var userid_key_new = ""
-    val TAG = "QuizCreatorFragment"
     var quizKey = ""
     private var jawabanTepat =""
     lateinit var jawabanA:String
@@ -127,7 +126,6 @@ class QuizCreatorFragment : Fragment(), View.OnClickListener,
     }
 
     private fun foundQuiz(b: Boolean) {
-        Log.d(TAG,"foundQuiz . b: $b")
         when {
             !b -> { generateQuiz()
             }
@@ -140,7 +138,6 @@ class QuizCreatorFragment : Fragment(), View.OnClickListener,
 
     private fun writeNewQuiz(){
         val soal = Soal(pertanyaan = pertanyaan,a = jawabanA,b = jawabanB,c = jawabanC,d = jawabanD,jawaban_tepat = jawabanTepat,status = "waiting",creator = userid_key_new)
-        Log.d(TAG,"writeQuiz . soal : $soal")
         quizRef.child(quizKey).setValue(soal)
         layoutSwitch(quiz_controller)
     }
@@ -276,7 +273,6 @@ class QuizCreatorFragment : Fragment(), View.OnClickListener,
     private fun getUserIdLocal() {
         val sharedPreferences: SharedPreferences = context!!.getSharedPreferences(USERID_KEY, Context.MODE_PRIVATE)
         userid_key_new = sharedPreferences.getString(userid_key, "").toString()
-        Log.d(TAG,"UserId is : $userid_key_new")
     }
 
 

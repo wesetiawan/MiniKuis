@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.fragment_quiz_key.*
 class QuizKeyFragment : Fragment(), View.OnClickListener {
     private lateinit var database: FirebaseDatabase
     private lateinit var quizRef: DatabaseReference
-    private val TAG = "QuizKeyFragment"
     private val bundle = Bundle()
     private var quizKey = ""
 
@@ -58,7 +57,6 @@ class QuizKeyFragment : Fragment(), View.OnClickListener {
         val transaction = activity?.supportFragmentManager!!.beginTransaction()
         val fragment = QuizFragment()
         bundle.putString("quizKey",quizKey)
-        Log.d(TAG,"bundle : ${bundle.getString("quizKey")}")
         fragment.arguments = bundle;
         transaction.replace(R.id.frg_holder,fragment,"quizFrg")
         transaction.commit()

@@ -26,7 +26,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
     private val bundle = Bundle()
     var x: TextView? = null
     var y: TextView? = null
-    val TAG = "QuizFragment"
     var jawabanTepat: String? = ""
     private var USERID_KEY = "useridkey"
     private var userid_key = ""
@@ -95,7 +94,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
     }
 
     private fun quizStatusListener(){
-        Log.d(TAG,"quizStatusListener")
         shimmerLayout.visibility= View.VISIBLE
         shimmerLayout.startShimmer()
         quizRef.child("status").addValueEventListener(statusListener)
@@ -113,7 +111,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
                 layoutSwitcher(errorLayout)
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Log.d(TAG, "getQuizData : ${dataSnapshot.value}")
                 tv_pertanyaan.text = dataSnapshot.child("pertanyaan").value.toString()
                 tv_jawabanA.text = dataSnapshot.child("a").value.toString()
                 tv_jawabanB.text = dataSnapshot.child("b").value.toString()
@@ -198,7 +195,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
     }
 
     private fun selectedAnswerAnimation(v: TextView){
-        Log.d(TAG,"answerButtonCondition . TextView : $v")
         v.setBackgroundResource(wrongAnswerBG)
         if (v != tv_jawabanA && tv_jawabanA.text == jawabanTepat){
             tv_jawabanA.setBackgroundResource(selectedAnswerBG)
@@ -260,7 +256,6 @@ class QuizFragment : Fragment(),View.OnClickListener{
     private fun getUserIdLocal() {
         val sharedPreferences: SharedPreferences = context!!.getSharedPreferences(USERID_KEY, Context.MODE_PRIVATE)
         userid_key_new = sharedPreferences.getString(userid_key, "").toString()
-        Log.d(TAG,"UserId is : $userid_key_new")
     }
 
 }

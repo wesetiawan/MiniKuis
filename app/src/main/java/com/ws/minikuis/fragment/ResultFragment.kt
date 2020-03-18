@@ -14,7 +14,6 @@ class ResultFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var getWinnerRef: DatabaseReference
     private lateinit var quizRef: DatabaseReference
-    val TAG = "ResultFragment"
     private var quizKey = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {

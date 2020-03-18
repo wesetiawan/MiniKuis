@@ -26,7 +26,6 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
     private lateinit var database: FirebaseDatabase
     private lateinit var myRef: DatabaseReference
     private lateinit var googleSignInClient: GoogleSignInClient
-    private var TAG = "GetStartedActivity"
     var uName: String = ""
     var uId: String = ""
     var USERID_KEY = "useridkey"
@@ -62,7 +61,6 @@ class GetStartedActivity : AppCompatActivity() ,View.OnClickListener {
                 val account = task.getResult(ApiException::class.java)
                 firebaseAuthWIthGoogle(account!!)
             }catch (e: ApiException){
-                Log.w(TAG, "Google sign in failed", e)
                 progressbarOrLoginBtn(btn_login_google)
             }
         }
