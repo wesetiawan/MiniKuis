@@ -227,13 +227,19 @@ class QuizCreatorFragment : Fragment(), View.OnClickListener,
 
     private fun stopQuiz() {
         timer.cancel()
-        quizControlRef.child("status").setValue("waiting")
+        quizControlRef.child("status").setValue("stop")
     }
 
     private fun startQuiz() {
         timer.start()
         quizControlRef.child("status").setValue("start")
     }
+
+
+    private fun prepareQuiz() {
+        quizControlRef.child("status").setValue("waiting")
+    }
+
 
     private val timer = object: CountDownTimer(30000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
@@ -254,7 +260,7 @@ class QuizCreatorFragment : Fragment(), View.OnClickListener,
                 if (dataSnapshot.value == null){
                     tv_name.text = "Pemenang Belum Ada"
                 }else{
-                    val winner = dataSnapshot.child(quizKey).value.toString()
+                    val winner = dataSnapshot.value.toString()
                     tv_name.text = winner
                 }
             }
@@ -267,6 +273,7 @@ class QuizCreatorFragment : Fragment(), View.OnClickListener,
             R.id.btn_mulai -> startQuiz()
             R.id.btn_stop -> stopQuiz()
             R.id.btn_hasil -> resultLayoutSwitch()
+            R.id.btn_prepare -> prepareQuiz()
         }
     }
 
