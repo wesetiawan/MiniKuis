@@ -13,14 +13,15 @@ import kotlinx.android.synthetic.main.fragment_result.*
 class ResultFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var getWinnerRef: DatabaseReference
+    private lateinit var quizRef: DatabaseReference
     val TAG = "ResultFragment"
-    var winner = ""
     private var quizKey = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getBundle()
         firebaseGetInstance()
+
     }
 
     override fun onCreateView(
@@ -49,11 +50,10 @@ class ResultFragment : Fragment() {
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.value == null){
-                    tv_name.text = "Pemenang Belum Ada"
+               if (dataSnapshot.value == null){
+                   tv_name.text = "Pemenang Belum Ada"
                 }else{
-                    val winner = dataSnapshot.child(quizKey).value.toString()
-                    tv_name.text = dataSnapshot.value.toString()
+                   tv_name.text = dataSnapshot.value.toString()
                 }
             }
         })

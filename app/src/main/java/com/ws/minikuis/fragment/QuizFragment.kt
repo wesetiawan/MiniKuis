@@ -38,13 +38,15 @@ class QuizFragment : Fragment(),View.OnClickListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getBundle()
-        firebaseGetInstance()
-        getUserIdLocal()
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        getBundle()
+        firebaseGetInstance()
+        getUserIdLocal()
         return inflater.inflate(R.layout.fragment_quiz, container, false)
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -57,10 +59,9 @@ class QuizFragment : Fragment(),View.OnClickListener{
 
         prepareQuiz()
     }
-
-    override fun onDestroy() {
+    override fun onDestroyView() {
         quizRef.child("status").removeEventListener(statusListener)
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     private fun firebaseGetInstance(){
@@ -89,7 +90,7 @@ class QuizFragment : Fragment(),View.OnClickListener{
         val fragment = ResultFragment()
         bundle.putString("quizKey",quizKey)
         fragment.arguments = bundle
-        transaction?.replace(R.id.frg_holder,fragment)
+        transaction?.replace(R.id.frg_holder,fragment,"resultFrg")
         transaction?.commit()
     }
 
@@ -101,7 +102,7 @@ class QuizFragment : Fragment(),View.OnClickListener{
     }
 
     private fun prepareQuiz(){
-        shimmerLayoutCall()
+        layoutSwitcher(shimmerLayout)
         shimmerLayout.startShimmer()
         quizStatusListener()
     }
@@ -109,7 +110,7 @@ class QuizFragment : Fragment(),View.OnClickListener{
     private fun loadQuizData(){
         quizRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-                errorLayoutCall()
+                layoutSwitcher(errorLayout)
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Log.d(TAG, "getQuizData : ${dataSnapshot.value}")
@@ -122,7 +123,7 @@ class QuizFragment : Fragment(),View.OnClickListener{
                 jawabanTepat = dataSnapshot.child("jawaban_tepat").value.toString()
 
                 shimmerLayout.stopShimmer()
-                quizLayoutCall()
+                layoutSwitcher(quizLayout)
 
             }
 
@@ -130,7 +131,7 @@ class QuizFragment : Fragment(),View.OnClickListener{
     }
 
     private fun updateStatus(){
-        quizRef.child("status").setValue("stop")
+        quizRef.child("status").setValue("waiting")
     }
 
     private fun startQuiz(){
@@ -161,7 +162,7 @@ class QuizFragment : Fragment(),View.OnClickListener{
 
     private val statusListener = object: ValueEventListener{
         override fun onCancelled(databaseError: DatabaseError) {
-            errorLayoutCall()
+            layoutSwitcher(errorLayout)
         }
 
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -171,7 +172,7 @@ class QuizFragment : Fragment(),View.OnClickListener{
                     startQuiz()
                 }
                 "waiting" -> {
-                    waitingLayoutCall()
+                    layoutSwitcher(waitingLayout)
                 }
                 else -> {
                     resultFragment()
@@ -220,32 +221,31 @@ class QuizFragment : Fragment(),View.OnClickListener{
         tv_jawabanD.isEnabled = b
     }
 
-    private fun waitingLayoutCall(){
-        quizLayout.visibility = View.GONE
-        shimmerLayout.visibility = View.GONE
-        errorLayout.visibility = View.GONE
-        waitingLayout.visibility = View.VISIBLE
-    }
+    fun layoutSwitcher(v:View){
+        v.visibility = View.VISIBLE
+        when (v) {
+            quizLayout -> {
+                shimmerLayout.visibility = View.GONE
+                errorLayout.visibility = View.GONE
+                waitingLayout.visibility = View.GONE
+            }
+            shimmerLayout -> {
+                quizLayout.visibility = View.GONE
+                errorLayout.visibility = View.GONE
+                waitingLayout.visibility = View.GONE
+            }
+            errorLayout -> {
+                quizLayout.visibility = View.GONE
+                shimmerLayout.visibility = View.GONE
+                waitingLayout.visibility = View.GONE
+            }
+            waitingLayout -> {
+                quizLayout.visibility = View.GONE
+                shimmerLayout.visibility = View.GONE
+                errorLayout.visibility = View.GONE
+            }
+        }
 
-    private fun quizLayoutCall(){
-        waitingLayout.visibility = View.GONE
-        shimmerLayout.visibility = View.GONE
-        errorLayout.visibility = View.GONE
-        quizLayout.visibility = View.VISIBLE
-    }
-
-    private fun shimmerLayoutCall(){
-        waitingLayout.visibility = View.GONE
-        quizLayout.visibility = View.GONE
-        errorLayout.visibility = View.GONE
-        shimmerLayout.visibility = View.VISIBLE
-    }
-
-    private fun errorLayoutCall(){
-        waitingLayout.visibility = View.GONE
-        quizLayout.visibility = View.GONE
-        shimmerLayout.visibility = View.GONE
-        errorLayout.visibility = View.VISIBLE
     }
 
     override fun onClick(v: View) {

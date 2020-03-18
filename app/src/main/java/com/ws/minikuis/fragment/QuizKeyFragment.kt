@@ -60,8 +60,7 @@ class QuizKeyFragment : Fragment(), View.OnClickListener {
         bundle.putString("quizKey",quizKey)
         Log.d(TAG,"bundle : ${bundle.getString("quizKey")}")
         fragment.arguments = bundle;
-        transaction.remove(this)
-        transaction.replace(R.id.frg_holder,fragment)
+        transaction.replace(R.id.frg_holder,fragment,"quizFrg")
         transaction.commit()
     }
 

@@ -26,8 +26,7 @@
             android:src="@drawable/winner"/>
         <TextView
             android:id="@+id/tv_name"
-            style="@style/resultText"
-            android:text=""/>
+            style="@style/resultText"/>
     </LinearLayout>
 
 </LinearLayout>
